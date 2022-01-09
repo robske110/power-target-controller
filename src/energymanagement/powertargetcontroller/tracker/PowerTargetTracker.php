@@ -45,10 +45,11 @@ class PowerTargetTracker{
 					return;
 				}
 			}
-		}
-		foreach($this->powerProviderModeChangeListeners as $modeChangeListener){
-			if(!$modeChangeListener->onPowerModeChange($oldMode, $mode)){
-				return;
+		}else{
+			foreach($this->powerProviderModeChangeListeners as $modeChangeListener){
+				if(!$modeChangeListener->onPowerModeChange($oldMode, $mode)){
+					return;
+				}
 			}
 		}
 		$this->powerProvider->setMode($mode);
