@@ -1,0 +1,13 @@
+{
+  "name": "robske110/power-target-controller",
+  "description": "Framework for building a PowerTarget-based controller. Can be used for ex",
+  "require": {
+    "php": "^8.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "robske_110\\smartenergy\\powertargetcontroller\\": "src/smartenergy/powertargetcontroller",
+      "robske_110\\smartenergy\\powertargetcontroller\\tests\\": "tests"
+    }
+  }
+}
