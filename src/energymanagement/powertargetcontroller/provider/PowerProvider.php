@@ -11,7 +11,6 @@ abstract class PowerProvider{
 	 * @param PowerProviderMode $mode
 	 */
 	public function setMode(PowerProviderMode $mode){
-		var_dump($mode);
 		$this->currentMode = $mode;
 	}
 
