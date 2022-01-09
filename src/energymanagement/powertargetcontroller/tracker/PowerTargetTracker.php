@@ -26,6 +26,14 @@ class PowerTargetTracker{
 		$this->setMode($this->trackMinDiff($powerTarget));
 	}
 
+	public function addPowerStepChangeListener(PowerStepChangeListener $powerStepChangeListener){
+		$this->powerStepChangeListeners[] = $powerStepChangeListener;
+	}
+
+	public function addPowerProviderModeChangeListener(PowerProviderModeChangeListener $modeChangeListener){
+		$this->powerProviderModeChangeListeners[] = $modeChangeListener;
+	}
+
 	private function setMode(PowerProviderMode $mode){
 		$oldMode = $this->powerProvider->getMode();
 		if(get_class($oldMode) === get_class($mode)){
