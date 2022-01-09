@@ -7,6 +7,11 @@ namespace robske_110\smartenergy\powertargetcontroller;
 class PowerTargetTracker{
 	private PowerProvider $powerProvider;
 
+	/** @var PowerStepChangeListener[] */
+	private array $powerStepChangeListeners = [];
+	/** @var PowerProviderModeChangeListener[] */
+	private array $powerProviderModeChangeListeners = [];
+
 	public function __construct(PowerProvider $powerProvider){
 		$this->powerProvider = $powerProvider;
 	}
@@ -15,7 +20,7 @@ class PowerTargetTracker{
 		//TODO: a ton of logic!
 
 		//Simple nearest algorithm:
-		$this->powerProvider->setMode($this->trackMinDiff($powerTarget));
+		$this->setMode($this->trackMinDiff($powerTarget));
 	}
 
 	private function setMode(PowerProviderMode $mode){
@@ -24,9 +29,18 @@ class PowerTargetTracker{
 			if($oldMode->selectedPowerStep == $mode->selectedPowerStep){
 				return;
 			}
-			//TODO middleware for powerStepChange
+			foreach($this->powerStepChangeListeners as $powerStepChangeListener){
+				if(!$powerStepChangeListener->onPowerStepChange($oldMode, $mode)){
+					return;
+				}
+			}
 		}
-		//TODO middleware for modeChange!
+		foreach($this->powerProviderModeChangeListeners as $modeChangeListener){
+			if(!$modeChangeListener->onPowerModeChange($oldMode, $mode)){
+				return;
+			}
+		}
+		$this->powerProvider->setMode($mode);
 	}
 
 	private function trackMinDiff(float $powerTarget): PowerProviderMode{
@@ -49,6 +63,26 @@ class PowerTargetTracker{
 		}
 		return $nearestMode;
 	}
+}
+
+interface PowerProviderModeChangeListener{
+	/**
+	 * @param PowerProviderMode $oldMode
+	 * @param PowerProviderMode $newMode
+	 *
+	 * @return bool Whether to allow (true) or block this PowerProviderMode change
+	 */
+	public function onPowerModeChange(PowerProviderMode $oldMode, PowerProviderMode $newMode);
+}
+
+interface PowerStepChangeListener{
+	/**
+	 * @param PowerProviderMode $oldMode
+	 * @param PowerProviderMode $newMode
+	 *
+	 * @return bool Whether to allow (true) or block this PowerStep change
+	 */
+	public function onPowerStepChange(PowerProviderMode $oldMode, PowerProviderMode $newMode): bool;
 }
 
 class PowerTargetTrackerException extends \RuntimeException{
