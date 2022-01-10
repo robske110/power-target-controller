@@ -37,7 +37,7 @@ class PowerTargetTracker{
 	private function setMode(PowerProviderMode $mode){
 		$oldMode = $this->powerProvider->getMode();
 		if(get_class($oldMode) === get_class($mode)){
-			if($oldMode->selectedPowerStep == $mode->selectedPowerStep){
+			if($oldMode->getSelectedPowerStep() == $mode->getSelectedPowerStep()){
 				return;
 			}
 			foreach($this->powerStepChangeListeners as $powerStepChangeListener){
@@ -63,7 +63,7 @@ class PowerTargetTracker{
 				$currentDiff = min($minDiff, abs($powerTarget - $possiblePowerStep->getPowerValue()));
 				if($currentDiff < $minDiff){
 					$minDiff = $currentDiff;
-					$powerProviderMode->selectedPowerStep = $possiblePowerStep;
+					$powerProviderMode->setSelectedPowerStep($possiblePowerStep);
 					$nearestMode = $powerProviderMode;
 				}
 			}
