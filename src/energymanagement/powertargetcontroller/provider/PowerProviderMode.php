@@ -18,7 +18,7 @@ abstract class PowerProviderMode{
 	}
 
 	public function setSelectedPowerStep(?PowerStep $powerStep){
-		if(!in_array($powerStep, $this->getPossiblePowerSteps())){
+		if($powerStep !== null && !in_array($powerStep, $this->getPossiblePowerSteps())){
 			throw new RuntimeException("Supplied PowerStep is not a possible PowerStep!");
 		}
 		$this->selectedPowerStep = $powerStep;
