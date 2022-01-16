@@ -12,12 +12,15 @@ use robske_110\energymanagement\powertargetcontroller\provider\PowerProvider;
 use robske_110\energymanagement\powertargetcontroller\provider\PowerProviderMode;
 use robske_110\energymanagement\powertargetcontroller\provider\PowerStep;
 use robske_110\energymanagement\powertargetcontroller\tracker\PowerTargetTracker;
+use robske_110\energymanagement\powertargetcontroller\tracker\PowerTargetTrackerOptions;
+
+require  __DIR__."/../vendor/autoload.php";
 
 class WBPowerStep implements PowerStep{
-	public function __construct(private int $current){}
+	public function __construct(private float $power){}
 
 	public function getPowerValue(): float{
-		return $this->current;
+		return $this->power;
 	}
 }
 
@@ -42,6 +45,10 @@ class ThreePhaseMode extends PowerProviderMode{
 }
 
 class Wallbox extends PowerProvider{
+	public function __construct(){
+		$this->setMode(new SinglePhaseMode);
+	}
+
 	public function getCurrentlyPossibleModes(): array{
 		return [
 			new SinglePhaseMode(),
@@ -86,9 +93,14 @@ class PR implements PowerRequirement{
 	}
 }
 
-$tracker = new PowerTargetTracker(new Wallbox());
+$options = new PowerTargetTrackerOptions;
+$options->selectedTrackingMode = "keepBelow";
+$options->keepBelowAllowAbove = 40;
+$tracker = new PowerTargetTracker(new Wallbox, $options);
 
 $tracker->trackTarget(11000);
+
+var_dump($tracker);
 
 $calculator = new PowerTargetCalculator();
 
