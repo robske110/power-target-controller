@@ -20,6 +20,10 @@ class PowerTargetTracker{
 		$this->options = $options;
 	}
 
+	public function getPowerProvider(): PowerProvider{
+		return $this->powerProvider;
+	}
+
 	public function trackTarget(float $powerTarget){
 		$this->setMode(match($this->options->get("mode.selected")){
 			"minDiff" => $this->trackMinDiff($powerTarget),
@@ -29,10 +33,12 @@ class PowerTargetTracker{
 	}
 
 	public function addPowerStepChangeListener(PowerStepChangeListener $powerStepChangeListener){
+		$powerStepChangeListener->setPowerTracker($this);
 		$this->powerStepChangeListeners[] = $powerStepChangeListener;
 	}
 
 	public function addPowerProviderModeChangeListener(PowerProviderModeChangeListener $modeChangeListener){
+		$modeChangeListener->setPowerTracker($this);
 		$this->powerProviderModeChangeListeners[] = $modeChangeListener;
 	}
 
