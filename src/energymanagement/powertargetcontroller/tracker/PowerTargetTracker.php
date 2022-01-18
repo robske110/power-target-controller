@@ -139,13 +139,16 @@ class PowerTargetTracker{
 		$relDiffToMode = [];
 		foreach($this->powerProvider->getCurrentlyPossibleModes() as $powerProviderMode){
 			foreach($powerProviderMode->getPossiblePowerSteps() as $possiblePowerStep){
-				$relDiffToMode[$possiblePowerStep->getPowerValue() - $powerTarget] = [$powerProviderMode, $possiblePowerStep];
+				$relDiffToMode[serialize($possiblePowerStep->getPowerValue() - $powerTarget)] = [
+					$powerProviderMode, $possiblePowerStep
+				];
 			}
 		}
 		$relDiffs = array_keys($relDiffToMode);
 		$minDiff = PHP_FLOAT_MAX;
 		$mode = null;
 		foreach($relDiffs as $relDiff){
+			$relDiff = unserialize($relDiff);
 			if(abs($relDiff) < $minDiff && $filter($relDiff)){
 				$minDiff = abs($relDiff);
 				$mode = $relDiffToMode[$relDiff];
@@ -154,6 +157,7 @@ class PowerTargetTracker{
 		$minDiff = PHP_FLOAT_MAX;
 		if($mode === null){ //could not find any powerModes that the filter accepts, fallback to selecting the closest
 			foreach($relDiffs as $relDiff){
+				$relDiff = unserialize($relDiff);
 				if(abs($relDiff) < $minDiff){
 					$mode = $relDiffToMode[$relDiff];
 				}
