@@ -63,13 +63,21 @@ class PowerTargetTracker{
 		$this->powerProvider->setMode($mode);
 	}
 
+	/**
+	 * TrackMinDiff algorithm
+	 * Selects the closest PowerProviderMode to the powerTarget.
+	 * If two PowerProviderModes have the same power value, this implementation will select the last one returned.
+	 * @param float $powerTarget
+	 *
+	 * @return PowerProviderMode
+	 */
 	private function trackMinDiff(float $powerTarget): PowerProviderMode{
 		$minDiff = PHP_FLOAT_MAX;
 		$nearestMode = null;
 		foreach($this->powerProvider->getCurrentlyPossibleModes() as $powerProviderMode){
 			foreach($powerProviderMode->getPossiblePowerSteps() as $possiblePowerStep){
 				$currentDiff = min($minDiff, abs($powerTarget - $possiblePowerStep->getPowerValue()));
-				if($currentDiff < $minDiff){
+				if($currentDiff <= $minDiff){
 					$minDiff = $currentDiff;
 					$powerProviderMode->setSelectedPowerStep($possiblePowerStep);
 					$nearestMode = $powerProviderMode;
