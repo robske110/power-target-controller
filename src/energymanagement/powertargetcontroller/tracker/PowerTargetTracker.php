@@ -76,7 +76,7 @@ class PowerTargetTracker{
 		$nearestMode = null;
 		foreach($this->powerProvider->getCurrentlyPossibleModes() as $powerProviderMode){
 			foreach($powerProviderMode->getPossiblePowerSteps() as $possiblePowerStep){
-				$currentDiff = min($minDiff, abs($powerTarget - $possiblePowerStep->getPowerValue()));
+				$currentDiff = abs($powerTarget - $possiblePowerStep->getPowerValue());
 				if($currentDiff <= $minDiff){
 					$minDiff = $currentDiff;
 					$powerProviderMode->setSelectedPowerStep($possiblePowerStep);
