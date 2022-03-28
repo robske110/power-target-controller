@@ -109,8 +109,8 @@ class PowerTargetTracker{
 	}
 
 	/**
-	 * TrackBelow algorithm
-	 * Selects the closest PowerProviderMode to the powerTarget that is lower than powerTarget-mode.keepAbove.allowBelow.
+	 * TrackAbove algorithm
+	 * Selects the closest PowerProviderMode to the powerTarget that is larger than powerTarget-mode.keepAbove.allowBelow.
 	 * If there is no PowerProviderMode larger than powerTarget-mode.keepAbove.allowBelow, the closest PowerProviderMode
 	 * to the powerTarget is returned.
 	 * If two PowerProviderModes have the same power value, this implementation will select the last one returned.
@@ -148,17 +148,17 @@ class PowerTargetTracker{
 		$minDiff = PHP_FLOAT_MAX;
 		$mode = null;
 		foreach($relDiffs as $relDiff){
-			$relDiff = unserialize($relDiff);
-			if(abs($relDiff) < $minDiff && $filter($relDiff)){
-				$minDiff = abs($relDiff);
+			$relDiffVal = unserialize($relDiff);
+			if(abs($relDiffVal) < $minDiff && $filter($relDiffVal)){
+				$minDiff = abs($relDiffVal);
 				$mode = $relDiffToMode[$relDiff];
 			}
 		}
 		$minDiff = PHP_FLOAT_MAX;
 		if($mode === null){ //could not find any powerModes that the filter accepts, fallback to selecting the closest
 			foreach($relDiffs as $relDiff){
-				$relDiff = unserialize($relDiff);
-				if(abs($relDiff) < $minDiff){
+				$relDiffVal = unserialize($relDiff);
+				if(abs($relDiffVal) < $minDiff){
 					$mode = $relDiffToMode[$relDiff];
 				}
 			}
