@@ -159,6 +159,7 @@ class PowerTargetTracker{
 			foreach($relDiffs as $relDiff){
 				$relDiffVal = unserialize($relDiff);
 				if(abs($relDiffVal) < $minDiff){
+					$minDiff = abs($relDiffVal);
 					$mode = $relDiffToMode[$relDiff];
 				}
 			}
