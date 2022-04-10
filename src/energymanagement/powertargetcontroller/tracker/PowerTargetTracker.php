@@ -157,9 +157,9 @@ class PowerTargetTracker{
 		$minDiff = PHP_FLOAT_MAX;
 		if($mode === null){ //could not find any powerModes that the filter accepts, fallback to selecting the closest
 			foreach($relDiffs as $relDiff){
-				$relDiffVal = unserialize($relDiff);
-				if(abs($relDiffVal) < $minDiff){
-					$minDiff = abs($relDiffVal);
+				$relDiffValAbs = abs(unserialize($relDiff));
+				if($relDiffValAbs < $minDiff){
+					$minDiff = $relDiffValAbs;
 					$mode = $relDiffToMode[$relDiff];
 				}
 			}
